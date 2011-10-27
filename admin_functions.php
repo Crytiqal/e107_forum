@@ -72,7 +72,7 @@
 						{
 							$subforums .= " ".$row3['forum_forum_name']." <a href='".e_SELF."?subforums.edit.$forum_forum_id.".$row3['forum_forum_id']."'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>&nbsp;<a href='".e_SELF."?subforums.delete.$forum_forum_id.".$row3['forum_forum_id']."'><img title='delete' src='".img_path('admin_images/delete_16.png')."' alt='' /></a>&nbsp;,";
 						}
-
+	
 					//	$subforums = rtrim($subforums, ', ');
 						$subforums .= "	<a href='".e_SELF."?subforums.create.$forum_forum_id'><img title='show' src='".img_path('admin_images/forums_16.png')."' alt='' /></a>";
 
@@ -83,14 +83,16 @@
 										<a href='".e_SELF."?forums.delete.$forum_forum_id'><img title='delete' src='".img_path('admin_images/delete_16.png')."' alt='' /></a>
 									</td>
 								</tr>";
+						$subforums = "";
 					}
 					else
 					{
 						$text .= "		</td>
 									<td></td>
 									<td>
-										<a href='".e_SELF."?forums.edit.$forum_parent_id'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>
+										<a href='".e_SELF."?forums.edit.$forum_forum_id'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>
 										<a href='".e_SELF."?forums.delete.$forum_forum_id'><img title='delete' src='".img_path('admin_images/delete_16.png')."' alt='' /></a>
+										<a href='".e_SELF."?subforums.create.$forum_forum_id'><img title='show' src='".img_path('admin_images/forums_16.png')."' alt='' /></a>
 									</td>
 								</tr>";
 					}
@@ -339,6 +341,39 @@
 		</form>
 		</div>";
 
+/*
+		<table>
+		<tr>
+			<td style='width:30%' class='forumheader3'>";
+
+		$sql->db_Select("forum_f", "*", "forum_forum_id AND forum_forum_id!='".$id."' AND forum_forum_sub='0'");
+		$text .= "<select name='forum_forum_sub' class='tbox'>\n";
+		$text .= "<option><b>Convert to Subforum</b></option>\n";
+		while (list(, $forum_forum_id_, , $forum_forum_name_) = $sql->db_Fetch())				// list() checks for column placement!
+		{
+			extract($row);
+			if ($forum_forum_id_ == $sub_id)
+			{
+				$text .= "<option value='$forum_forum_id_' selected='selected'>".$forum_forum_name_."</option>\n";
+			}
+			else
+			{
+				$text .= "<option value='$forum_forum_id_'>".$forum_forum_name_."</option>\n";
+			}
+		}
+		$text .= "</select>
+			</td>
+		</tr>
+
+		<tr style='vertical-align:top'>
+			<td colspan='2'  style='text-align:center' class='forumheader'>
+			<input type='hidden' name='e-token' value='".e_TOKEN."' />
+			<input class='button' type='submit' name='convert_subforum' value='convert' />
+			</td>
+		</tr>
+		</table>
+*/
+
 		$ns->tablerender(FORLAN_75, $text);
 	}
 
@@ -357,7 +392,7 @@
 			if ($sql->db_Select("forum_f", "*", "forum_forum_id=$id AND forum_forum_sub='0'"))			// Forum exists and is parent, continue.
 			{
 
-	// ---------------------------------------------------------------------------------------------+
+			// -----------------------------------------------------------------------------------+
 
 				if ($sql2->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub='0'"))	// Subforum exists but is forum, go edit subforum.
 				{
@@ -372,7 +407,7 @@
 					exit;
 				}
 
-	// ---------------------------------------------------------------------------------------------+
+			// -----------------------------------------------------------------------------------+
 
 			}
 			elseif ($sql->db_Select("forum_f", "*", "forum_forum_id=$id AND forum_forum_sub!='0'"))		// Forum exists but is subforum, go edit subforum.
@@ -391,15 +426,15 @@
 		}
 		if ($sub_action == "edit" && !$_POST['update_subforum'])
 		{
-			if ($sql2->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub=$id"))
+			if ($sql->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub=$id"))
 			{
-				$row2 = $sql2->db_Fetch();
-				extract($row2);
+				$row = $sql->db_Fetch();
+				extract($row);
 			}
-			elseif ($sql2->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub!=$id"))
+			elseif ($sql->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub!=$id"))
 			{
-					$row2 = $sql2->db_Fetch();
-					$id = "".$row2['forum_forum_sub']."";
+					$row = $sql->db_Fetch();
+					$id = "".$row['forum_forum_sub']."";
 					header("location:".e_SELF."?subforums.edit.$id.$sub_id");
 					exit;
 			}
@@ -411,15 +446,15 @@
 		}
 		if ($sub_action == "delete" && !$_POST['delete_subforum'])
 		{
-			if ($sql2->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub=$id"))
+			if ($sql->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub=$id"))
 			{
-				$row2 = $sql2->db_Fetch();
-				extract($row2);
+				$row = $sql->db_Fetch();
+				extract($row);
 			}
-			elseif ($sql2->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub!=$id"))
+			elseif ($sql->db_Select("forum_f", "*", "forum_forum_id=$sub_id AND forum_forum_sub!=$id"))
 			{
-					$row2 = $sql2->db_Fetch();
-					$id = "".$row2['forum_forum_sub']."";
+					$row = $sq2->db_Fetch();
+					$id = "".$row['forum_forum_sub']."";
 					header("location:".e_SELF."?subforums.delete.$id.$sub_id");
 					exit;
 			}
@@ -441,11 +476,11 @@
 			<td style='width:60%' class='forumheader3'>";
 
 		$sql->db_Select("forum_f", "*", "forum_forum_id AND forum_forum_sub='0'");
-		$text .= "<select name='forum_forum_id' class='tbox'>\n";
+		$text .= "<select name='forum_forum_sub' class='tbox'>\n";
 		while (list(, $forum_forum_id_, , $forum_forum_name_) = $sql->db_Fetch())				// list() checks for column placement!
 		{
 			extract($row);
-			if ($forum_forum_id_ == $forum_forum_id)
+			if ($forum_forum_id_ == $id)
 			{
 				$text .= "<option value='$forum_forum_id_' selected='selected'>".$forum_forum_name_."</option>\n";
 			}
@@ -505,6 +540,39 @@
 		</form>
 		</div>";
 
+/*
+		<table>
+		<tr>
+			<td style='width:30%' class='forumheader3'>";
+
+		$sql->db_Select("forum_p", "*", "forum_parent_id");
+		$text .= "<select name='forum_parent_id' class='tbox'>\n";
+		$text .= "<option><b>Convert to Forum</b></option>\n";
+		while (list($forum_parent_id_, $forum_parent_name_) = $sql->db_Fetch())							// list() checks for column placement!
+		{
+			extract($row);
+			if ($forum_parent_id_ == $forum_parent_id)
+			{
+				$text .= "<option value='$forum_parent_id_' selected='selected'>".$forum_parent_name_."</option>\n";
+			}
+			else
+			{
+				$text .= "<option value='$forum_parent_id_'>".$forum_parent_name_."</option>\n";
+			}
+		}
+		$text .= "</select>
+			</td>
+		</tr>
+
+		<tr style='vertical-align:top'>
+			<td colspan='2'  style='text-align:center' class='forumheader'>
+			<input type='hidden' name='e-token' value='".e_TOKEN."' />
+			<input class='button' type='submit' name='convert_subforum' value='convert' />
+			</td>
+		</tr>
+		</table>
+*/
+
 		$ns->tablerender(FORLAN_75, $text);
 	}
 
@@ -523,7 +591,7 @@
 // --------------------------------------------------------------------------------------------------+
 // ------------------------------------------------------------------- function show_usermodules() --+
 // --------------------------------------------------------------------------------------------------+
-
+     
 	function show_usermodules($sub_action)
 	{
 		global $sql, $ns;
@@ -603,7 +671,7 @@ if(isset($_POST['submit_forum']))
 {
 	$_POST['forum_forum_name'] = $tp->toDB($_POST['forum_forum_name']);
 	$_POST['forum_forum_description'] = $tp->toDB($_POST['forum_forum_description']);
-	$sql->db_Insert("forum_f", "'".$_POST['forum_parent_id']."', '0', '".$id."', '".$_POST['forum_forum_name']."', '".$_POST['forum_forum_description']."', '".$_POST['forum_forum_class']."', '".$_POST['forum_forum_postclass']."', '0', '0'");
+	$sql->db_Insert("forum_f", "'".$_POST['forum_parent_id']."', '".$id."', '0', '".$_POST['forum_forum_name']."', '".$_POST['forum_forum_description']."', '".$_POST['forum_forum_class']."', '".$_POST['forum_forum_postclass']."', '0', '0'");
 	mysql_query("ALTER TABLE e107_forum_f ORDER BY forum_forum_id ASC") or die (mysql_error());
 	$sql->db_Close();
 	show_message("Forum created");	// FORLAN_13
@@ -626,6 +694,44 @@ if(isset($_POST['delete_forum']))
 	$sql->db_Close();
 	show_message(FORLAN_14);
 	$action = "main";
+}
+if(isset($_POST['convert_forum']))
+{
+}
+	// ---------------------------------------------------------------------------------------------+
+
+if(isset($_POST['submit_subforum']))
+{
+	$_POST['forum_forum_name'] = $tp->toDB($_POST['forum_forum_name']);
+	$_POST['forum_forum_description'] = $tp->toDB($_POST['forum_forum_description']);
+	$sql->db_Insert("forum_f", "'0', '0', '".$_POST['forum_forum_sub']."', '".$_POST['forum_forum_name']."', '".$_POST['forum_forum_description']."', '".$_POST['forum_forum_class']."', '".$_POST['forum_forum_postclass']."', '0', '0'");
+	mysql_query("ALTER TABLE e107_forum_f ORDER BY forum_forum_id ASC") or die (mysql_error());
+	$sql->db_Close();
+	show_message("Subforum created");	// FORLAN_13
+	$action = "create";
+}
+if(isset($_POST['update_subforum']))
+{
+	$_POST['forum_forum_name'] = $tp->toDB($_POST['forum_forum_name']);
+	$_POST['forum_forum_description'] = $tp->toDB($_POST['forum_forum_description']);
+
+	$sql->db_Update("forum_f", "forum_forum_sub='".$_POST['forum_forum_sub']."', forum_forum_name='".$_POST['forum_forum_name']."', forum_forum_description='".$_POST['forum_forum_description']."', forum_forum_class='".$_POST['forum_forum_class']."', forum_forum_postclass='".$_POST['forum_parent_postclass']."'  WHERE forum_forum_id=$sub_id");
+
+	mysql_query("ALTER TABLE e107_forum_f ORDER BY forum_forum_id ASC") or die (mysql_error());
+	$sql->db_Close();
+	show_message(FORLAN_14);
+	$action = "edit";
+}
+if(isset($_POST['delete_subforum']))
+{
+	$sql->db_Delete("forum_f", "forum_forum_id='$sub_id'");
+	mysql_query("ALTER TABLE e107_forum_f AUTO_INCREMENT = 1, ORDER BY forum_forum_id ASC") or die (mysql_error());
+	$sql->db_Close();
+	show_message(FORLAN_14);
+	$action = "main";
+}
+if(isset($_POST['convert_subforum']))
+{
 }
 	// ---------------------------------------------------------------------------------------------+
 
