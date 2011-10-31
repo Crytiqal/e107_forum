@@ -702,10 +702,10 @@
 	}
 
 // --------------------------------------------------------------------------------------------------+
-// --------------------------------------------------------------------- function inform_parents() --+
+// ----------------------------------------------------------------------- function info_parents() --+
 // --------------------------------------------------------------------------------------------------+
 
-	function inform_parents($parent_id)
+	function info_parents($parent_id)
 	{
 		global $sql;
 
@@ -716,7 +716,7 @@
 		$sql->db_Select("forum_f", "*", "forum_parent_id='$parent_id' AND forum_forum_sub='0'");
 		while($row = $sql->db_Fetch())
 		{
-			$info .= inform_forums($row);
+			$info .= info_forums($row);
 		}
 
 		$info .="</ul>";
@@ -724,10 +724,10 @@
 	}
 
 // --------------------------------------------------------------------------------------------------+
-// ---------------------------------------------------------------------- function inform_forums() --+
+// ------------------------------------------------------------------------ function info_forums() --+
 // --------------------------------------------------------------------------------------------------+
 
-	function inform_forums($row)
+	function info_forums($row)
 	{
 		global $sql2;
 
@@ -737,7 +737,7 @@
 /* Thread- and Postcount function */
 
 		$forum_info = "<li>Forum ".$forum_id." [".$forum_name."] has ";
-		$forum_info .= inform_thread_postcount($forum_id);
+		$forum_info .= info_thread_postcount($forum_id);
 		$forum_info .= "<br />";
 
 /* Sub-Forums */
@@ -745,7 +745,7 @@
 		$sql2->db_Select("forum_f", "*", "forum_forum_sub='$forum_id'");
 		while($row2 = $sql2->db_Fetch())
 		{
-			$forum_info .= inform_subforums($row2);
+			$forum_info .= info_subforums($row2);
 		}
 
 		$forum_info .= "</li>";
@@ -753,10 +753,10 @@
 	}
 
 // --------------------------------------------------------------------------------------------------+
-// ------------------------------------------------------------------- function inform_subforums() --+
+// --------------------------------------------------------------------- function info_subforums() --+
 // --------------------------------------------------------------------------------------------------+
 
-	function inform_subforums($row2)
+	function info_subforums($row2)
 	{
 
 		$subforum_id = $row2['forum_forum_id'];
@@ -765,7 +765,7 @@
 /* Thread- and Postcount function */
 		
 		$subforum_info = "<i>Sub-Forum ".$subforum_id." [".$subforum_name."] has ";
-		$subforum_info .= inform_thread_postcount($subforum_id);
+		$subforum_info .= info_thread_postcount($subforum_id);
 		$subforum_info .= "</i><br /><br />";
 
 		return $subforum_info;
@@ -773,10 +773,10 @@
 
 
 // --------------------------------------------------------------------------------------------------+
-// ------------------------------------------------------------ function inform_thread_postcount() --+
+// -------------------------------------------------------------- function info_thread_postcount() --+
 // --------------------------------------------------------------------------------------------------+
 	
-	function inform_thread_postcount($id)
+	function info_thread_postcount($id)
 	{
 		global $sql3;
 
@@ -838,9 +838,9 @@ if(isset($_POST['delete_parent']))
 	else
 	{
 		$info = "<b>The parent has the following info:</b><br />";
-		$info .= inform_parents($id);
+		$info .= info_parents($id);
 
-		$warning ="
+		$warning = "
 		<table>
 		<tr>
 			<td style='width:50%'>$info</td>
@@ -904,9 +904,9 @@ if(isset($_POST['delete_forum']))
 		$row['forum_forum_id'] = $id;
 		$row['forum_forum_name'] = $_POST['forum_forum_name'];
 		$info = "<b>The forum has the following info:</b><br />";
-		$info .= inform_forums($row);
+		$info .= info_forums($row);
 
-		$warning ="
+		$warning = "
 		<table>
 		<tr>
 			<td style='width:50%'>$info</td>
@@ -991,9 +991,9 @@ if(isset($_POST['delete_subforum']))
 		$row['forum_forum_id'] = $sub_id;
 		$row['forum_forum_name'] = $_POST['forum_forum_name'];
 		$info = "<b>The subforum has the following info:</b><br />";
-		$info .= inform_subforums($row);
+		$info .= info_subforums($row);
 
-		$confirm ="
+		$warning = "
 		<table>
 		<tr>
 			<td style='width:50%'>$info</td>
@@ -1001,7 +1001,7 @@ if(isset($_POST['delete_subforum']))
 		</tr>
 		</table>";
 
-		$text = "
+		$confirm = "
 		<div style='text-align:center'>
 		<b>Confirm delete operation</b>
 		<br />
@@ -1011,8 +1011,8 @@ if(isset($_POST['delete_subforum']))
 		</form>
 		</div>";
 
-		$ns->tablerender("", $confirm);
-		$ns->tablerender("Confirm Delete", $text);
+		$ns->tablerender("", $warning);
+		$ns->tablerender("Confirm Delete", $confirm);
 
 		require_once(e_ADMIN."footer.php");
 	}
@@ -1031,9 +1031,9 @@ if(isset($_POST['convert_subforum']))
 	}
 }
 
-	// ---------------------------------------------------------------------------------------------+
-	// ---------------------------------------------------------------------------------------------+
-	// ---------------------------------------------------------------------------------------------+
+// --------------------------------------------------------------------------------------------------+
+// --------------------------------------------------------------------------- Module Installation --+
+// --------------------------------------------------------------------------------------------------+
 
 if(isset($_POST['install_usermodules']))
 {
