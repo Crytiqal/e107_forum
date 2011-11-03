@@ -42,9 +42,12 @@ require_once(e_HANDLER."ren_help.php");
 
 // ------------------------------------------------------------------------------- Forum Functions --+
 
-$sql = new db;
-$sql2 = new db;
-$sql3 = new db;
+$sql = new db;		// Parents
+$sql2 = new db;		// Forums
+$sql3 = new db;		// Sub-Forums
+$sql4 = new db;		// Threads
+$sql5 = new db;		// Posts
+
 
 require_once(e_PLUGIN."forum/admin_functions.php");
 
