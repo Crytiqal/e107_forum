@@ -3,7 +3,7 @@
 + ----------------------------------------------------------------------------------------------------+
 |        e107 website system 
 |        Email: crytiqal@team-aero.org
-|        Organization: Team-Aero Copyright 2011 - www.team-aero.org
+|        Organization: Team-Aero Copyright 2012 - www.team-aero.org
 |        $Id: admin_functions.php 659 2011-10-09 12:07:49Z crytiqal $
 |        License: GNU GENERAL PUBLIC LICENSE - http://www.gnu.org/licenses/gpl.txt
 +----------------------------------------------------------------------------------------------------+
