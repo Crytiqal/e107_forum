@@ -41,7 +41,7 @@
 				extract($row);
 
 				$text .= "	<tr>
- 							<td colspan='2'>({$forum_parent_id})&nbsp;<a href='".$forum_parent_name."'>".$forum_parent_name."</a><br />".$forum_parent_description."</td>
+ 							<td colspan='2'>({$forum_parent_id})&nbsp;<a href='p".$forum_parent_id."-".preg_replace('![^a-z0-9]+!i','-',$forum_parent_name)."'>".$forum_parent_name."</a><br />".$forum_parent_description."</td>
  <!-- --><!-- -->					<td><b>".FORLAN_140.":</b> ".r_userclass_name($forum_parent_class)."<br /><b>".FORLAN_141.":</b> ".r_userclass_name($forum_parent_postclass)."</td>
 							<td>
 								<a href='".e_SELF."?parents.edit.$forum_parent_id'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>
@@ -60,7 +60,7 @@
 
 					$text .= "	<tr>
 								<td><img src='".e_PLUGIN."forum/images/forums/".$forum_forum_id.".png' alt='' /></td>
-								<td>({$forum_forum_id})&nbsp;<a href='".$forum_forum_name."'>".$forum_forum_name."</a><br />".$forum_forum_description."";
+								<td>({$forum_forum_id})&nbsp;<a href='p".$forum_parent_id."f".$forum_forum_id."-".preg_replace('![^a-z0-9]+!i','-',$forum_forum_name)."'>".$forum_forum_name."</a><br />".$forum_forum_description."";
 
 				// ------------------------------------------------------------ Show Subforums --+
 
@@ -68,14 +68,14 @@
 					{
 						while($row3 = $sql3->db_Fetch())
 						{
-							$subforums .= " ".$row3['forum_forum_name']." 
+							$subforums .= " <a href='p".$forum_parent_id."f".$forum_forum_id."s".$row3['forum_forum_id']."-".preg_replace('![^a-z0-9]+!i','-',$row3['forum_forum_name'])."'>".$row3['forum_forum_name']."</a> 
 										<a href='".e_SELF."?subforums.edit.$forum_forum_id.".$row3['forum_forum_id']."'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>
 										<a href='".e_SELF."?subforums.delete.$forum_forum_id.".$row3['forum_forum_id']."'><img title='delete' src='".img_path('admin_images/delete_16.png')."' alt='' /></a>,";
 						}
 					//	$subforums = rtrim($subforums, ', ');
 						$subforums .= "	<a href='".e_SELF."?subforums.create.$forum_forum_id'><img title='create' src='".img_path('admin_images/forums_16.png')."' alt='' /></a>";
 
-						$text .= " 	<br /><b>Sub-Forums:</b>".$subforums."</td>
+						$text .= " 	<br /><b>Sub-Forum(s):</b>".$subforums."</td>
 									<td></td>
 									<td>
 										<a href='".e_SELF."?forums.edit.$forum_forum_id'><img title='edit' src='".img_path('admin_images/edit_16.png')."' alt='' /></a>
@@ -172,14 +172,14 @@
 		<table style='".ADMIN_WIDTH."' class='fborder'>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Parent name:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_parent_name' size='60' value='$forum_parent_name' maxlength='250' />
 			</td>
 		</tr>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Parent description:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_parent_description' size='60' value='$forum_parent_description' maxlength='250' />
 			</td>
@@ -278,7 +278,7 @@
 		<table style='".ADMIN_WIDTH."' class='fborder'>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Parent:</td>
 			<td style='width:60%' class='forumheader3'>";
 
 		$sql->db_Select("forum_p", "*", "forum_parent_id");
@@ -301,14 +301,14 @@
 		</tr>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Forum name:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_forum_name' size='60' value='$forum_forum_name' maxlength='250' />
 			</td>
 		</tr>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Forum description:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_forum_description' size='60' value='$forum_forum_description' maxlength='250' />
 			</td>
@@ -492,7 +492,7 @@
 		<table style='".ADMIN_WIDTH."' class='fborder'>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>				
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Parent:</td>				
 			<td style='width:60%' class='forumheader3'>";
 
 		$sql->db_Select("forum_f", "*", "forum_forum_id AND forum_forum_sub='0'");
@@ -516,14 +516,14 @@
 		</tr>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Subforum name:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_forum_name' size='60' value='$forum_forum_name' maxlength='250' />
 			</td>
 		</tr>
 
 		<tr>
-<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31.":</td>
+<!-- -->		<td style='width:40%' class='forumheader3'>".FORLAN_31."Subforum description:</td>
 			<td style='width:60%' class='forumheader3'>
 			<input class='tbox' type='text' name='forum_forum_description' size='60' value='$forum_forum_description' maxlength='250' />
 			</td>
@@ -977,7 +977,7 @@ if(isset($_POST['delete_forum']))
 	{
 		$row['forum_forum_id'] = $id;
 		$row['forum_forum_name'] = $_POST['forum_forum_name'];
-		del_forums($row);
+		del_forums($id);
 		show_message(FORLAN_14);
 		$action = "main";
 	}
@@ -1065,7 +1065,7 @@ if(isset($_POST['delete_subforum']))
 	{
 		$row['forum_forum_id'] = $sub_id;
 		$row['forum_forum_name'] = $_POST['forum_forum_name'];
-		delete_subforums($row);
+		del_subforums($sub_id);
 		show_message(FORLAN_14);
 		$action = "main";
 	}
